@@ -14,39 +14,45 @@ class ActionsWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               if (timerState is TimerInitial) ...[
-                FloatingActionButton(
+                IconButton(
+                  iconSize: 65,
                   onPressed: () => context
                       .read<TimerBloc>()
                       .add(TimerStarted(duration: timerState.duration)),
-                  child: Icon(Icons.play_arrow_rounded),
+                  icon: Icon(Icons.play_circle_fill_rounded),
                 ),
               ],
               if (timerState is TimerRunInProgress) ...[
-                FloatingActionButton(
+                IconButton(
+                    iconSize: 65,
                     onPressed: () =>
                         context.read<TimerBloc>().add(TimerPaused()),
-                    child: Icon(Icons.pause_circle_outline_rounded)),
-                FloatingActionButton(
+                    icon: Icon(Icons.pause_circle_outline_rounded)),
+                IconButton(
+                    iconSize: 65,
                     onPressed: () =>
                         context.read<TimerBloc>().add(TimerReset()),
-                    child: Icon(Icons.replay_circle_filled_rounded)),
+                    icon: Icon(Icons.replay_circle_filled_rounded)),
               ],
               if (timerState is TimerRunPause) ...[
-                FloatingActionButton(
+                IconButton(
+                  iconSize: 65,
                   onPressed: () =>
                       context.read<TimerBloc>().add(TimerResumed()),
-                  child: Icon(Icons.play_circle_outline_rounded),
+                  icon: Icon(Icons.play_circle_outline_rounded),
                 ),
-                FloatingActionButton(
+                IconButton(
+                    iconSize: 65,
                     onPressed: () =>
                         context.read<TimerBloc>().add(TimerReset()),
-                    child: Icon(Icons.replay_circle_filled_rounded)),
+                    icon: Icon(Icons.replay_circle_filled_rounded)),
               ],
               if (timerState is TimerRunComplete) ...[
-                FloatingActionButton(
+                IconButton(
+                    iconSize: 65,
                     onPressed: () =>
                         context.read<TimerBloc>().add(TimerReset()),
-                    child: Icon(Icons.replay_circle_filled_rounded)),
+                    icon: Icon(Icons.replay_circle_filled_rounded)),
               ],
             ],
           );
