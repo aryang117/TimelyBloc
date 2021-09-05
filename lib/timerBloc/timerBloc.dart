@@ -51,7 +51,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   }
 
   Stream<TimerState> _mapTimerResumedState(TimerResumed timerResumed) async* {
-    if (state is TimerPaused) _tickerSub?.resume();
+    if (state is TimerRunPause) _tickerSub?.resume();
     yield TimerRunInProgress(state.duration);
   }
 
