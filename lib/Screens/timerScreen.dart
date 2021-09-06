@@ -35,10 +35,9 @@ class TimerView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
-              TimerTextField(),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 100.0),
-                child: Center(child: TimerText()),
+                padding: EdgeInsets.symmetric(vertical: 100.0),
+                child: TimerTextField(),
               ),
               ActionsWidget(),
             ],
@@ -95,13 +94,13 @@ class TimerTextField extends StatelessWidget {
         print(timerState);
 
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 150,
+                width: 125,
                 child: TextFormField(
                     decoration: InputDecoration(
                         hintText: '00',
@@ -121,9 +120,12 @@ class TimerTextField extends StatelessWidget {
                       print('hehe' + value);
                     }),
               ),
-              Text(': ', style: Theme.of(context).textTheme.headline1),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
+                child: Text(':', style: Theme.of(context).textTheme.headline1),
+              ),
               Container(
-                width: 150,
+                width: 125,
                 child: TextFormField(
                     decoration: InputDecoration.collapsed(
                         hintText: '00', focusColor: Colors.amber),
