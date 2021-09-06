@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:bloctimerflutter/Screens/actions.dart';
-import 'package:bloctimerflutter/Screens/background.dart';
-import 'package:bloctimerflutter/timerBloc/timerBloc.dart';
+import '/Screens/actions.dart';
+import '/Screens/background.dart';
+import '/timerBloc/timerBloc.dart';
 
 import '../ticker.dart';
 import '../timer/timer.dart';
@@ -30,16 +30,19 @@ class TimerView extends StatelessWidget {
         body: Stack(
       children: [
         const BackgroundWidget(),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 100.0),
-              child: Center(child: TimerText()),
-            ),
-            ActionsWidget(),
-          ],
+        SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              TimerTextField(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 100.0),
+                child: Center(child: TimerText()),
+              ),
+              ActionsWidget(),
+            ],
+          ),
         ),
       ],
     ));
@@ -60,5 +63,90 @@ class TimerText extends StatelessWidget {
 
     return Text('$minutesStr : $secondsStr',
         style: Theme.of(context).textTheme.headline1);
+  }
+}
+
+class TimerTextField extends StatelessWidget {
+  const TimerTextField({Key? key}) : super(key: key);
+
+  int _getTime(int min, int sec) {
+    int time = ((min * 60) + sec);
+
+    print("getTime =" + time.toString());
+
+    return time;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _minController = TextEditingController(text: '00');
+    final _secController = TextEditingController(text: '00');
+    const TextInputType textInputType = TextInputType.number;
+    final duration = context.select((TimerBloc bloc) => bloc.state.duration);
+    final minutesStr =
+        ((duration / 60) % 60).floor().toString().padLeft(2, '0');
+    final secondsStr = ((duration % 60)).floor().toString().padLeft(2, '0');
+
+    return BlocBuilder<TimerBloc, TimerState>(
+      builder: (_, timerState) {
+        _minController.text = minutesStr;
+        _secController.text = secondsStr;
+
+        print(timerState);
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 150,
+                child: TextFormField(
+                    decoration: InputDecoration(
+                        hintText: '00',
+                        focusColor: Colors.amber,
+                        counterText: '',
+                        border: InputBorder.none),
+                    controller: _minController,
+                    keyboardType: textInputType,
+                    readOnly: (timerState is TimerRunInProgress) ? true : false,
+                    maxLength: 2,
+                    style: Theme.of(context).textTheme.headline1,
+                    onFieldSubmitted: (String? value) {
+                      value = value == null ? '600' : value;
+                      context.read<TimerBloc>().add(TimerStarted(
+                          duration: _getTime(int.parse(value),
+                              int.parse(_secController.text))));
+                      print('hehe' + value);
+                    }),
+              ),
+              Text(': ', style: Theme.of(context).textTheme.headline1),
+              Container(
+                width: 150,
+                child: TextFormField(
+                    decoration: InputDecoration.collapsed(
+                        hintText: '00', focusColor: Colors.amber),
+                    controller: _secController,
+                    keyboardType: textInputType,
+                    style: Theme.of(context).textTheme.headline1,
+                    readOnly: (timerState is TimerRunInProgress) ? true : false,
+                    onFieldSubmitted: (String? value) {
+                      value = value == null ? '600' : value;
+                      context.read<TimerBloc>().add(TimerStarted(
+                          duration: _getTime(int.parse(_minController.text),
+                              int.parse(value))));
+                      print('weorfhsdidfh');
+                      print('hehe' +
+                          _minController.text.toString() +
+                          ":" +
+                          value);
+                    }),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
