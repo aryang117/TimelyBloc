@@ -18,7 +18,7 @@ class ActionsWidget extends StatelessWidget {
             children: [
               if (timerState is TimerInitial) ...[
                 MaterialButton(
-                  color: Colors.redAccent,
+                  color: Colors.blueAccent.shade700,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100)),
