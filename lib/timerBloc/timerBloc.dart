@@ -8,7 +8,7 @@ part 'timerState.dart';
 part 'timerEvent.dart';
 
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
-  //static const int _duration = 60;
+  static int totalTime = 120;
   final Ticker _ticker;
 
   StreamSubscription<int>? _tickerSub;
@@ -57,6 +57,15 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   Stream<TimerState> _mapTimerResetState(TimerReset timerReset) async* {
     _tickerSub?.cancel();
+    totalTime = 300;
     yield TimerInitial(300);
+  }
+
+  void setTotalTime(int _totalTime) {
+    totalTime = _totalTime;
+  }
+
+  int getTotalTime() {
+    return totalTime;
   }
 }
