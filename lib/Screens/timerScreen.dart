@@ -147,6 +147,14 @@ class TimerTextField extends StatelessWidget {
                           _minController.text.toString() +
                           ":" +
                           value);
+
+                      //TODO : make another smol bloc for updation via formfields,
+                      //the play button will track changes and when pressed will give new values to the timer
+
+                      // context.read<FormBloc>().newString(_getTime(
+                      //         int.parse(_minController.text), int.parse(value))
+                      //     .toString());
+                      // print('weorfhsdidfh');
                     }),
               ),
             ],
