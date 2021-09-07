@@ -79,12 +79,13 @@ class TimerTextField extends StatelessWidget {
     final _minController = TextEditingController(text: '00');
     final _secController = TextEditingController(text: '00');
     const TextInputType textInputType = TextInputType.number;
+
     final duration = context.select((TimerBloc bloc) => bloc.state.duration);
     final minutesStr =
         ((duration / 60) % 60).floor().toString().padLeft(2, '0');
     final secondsStr = ((duration % 60)).floor().toString().padLeft(2, '0');
 
-    int ttime = context.read<TimerBloc>().getTotalTime();
+    int totalTime = context.read<TimerBloc>().getTotalTime();
 
     return BlocBuilder<TimerBloc, TimerState>(
       builder: (_, timerState) {
@@ -122,11 +123,10 @@ class TimerTextField extends StatelessWidget {
                                     .fontSize! -
                                 20),
                         onFieldSubmitted: (String? value) {
-                          value = value == null ? '600' : value;
-                          context.read<TimerBloc>().add(TimerStarted(
-                              duration: _getTime(int.parse(value),
-                                  int.parse(_secController.text))));
-                          print('hehe' + value);
+                          context.read<TimerBloc>().setTotalTime(
+                                _getTime(int.parse(_minController.text),
+                                    int.parse(_secController.text)),
+                              );
                         }),
                   ),
                   Padding(
@@ -156,16 +156,6 @@ class TimerTextField extends StatelessWidget {
                                   20,
                             ),
                         onFieldSubmitted: (String? value) {
-                          value = value == null ? '600' : value;
-                          context.read<TimerBloc>().add(TimerStarted(
-                              duration: _getTime(int.parse(_minController.text),
-                                  int.parse(value))));
-                          print('weorfhsdidfh');
-                          print('hehe' +
-                              _minController.text.toString() +
-                              ":" +
-                              value);
-
                           //TODO : make another smol bloc for updation via formfields,
                           //the play button will track changes and when pressed will give new values to the timer
 
@@ -181,7 +171,6 @@ class TimerTextField extends StatelessWidget {
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width - 120,
-                //height: MediaQuery.of(context).size.width - 50,
                 child: LinearProgressIndicator(
                     valueColor: timerState is TimerRunInProgress
                         ? const AlwaysStoppedAnimation<Color>(Colors.redAccent)
@@ -189,7 +178,7 @@ class TimerTextField extends StatelessWidget {
                             Colors.blueAccent),
                     minHeight: 3,
                     backgroundColor: Colors.grey[900],
-                    value: timerState.duration / ttime
+                    value: timerState.duration / totalTime
                     //TODO: track total timer value via observer
                     ),
               ),
