@@ -177,6 +177,24 @@ class TimerTextField extends StatelessWidget {
               ),
             ],
           ),
+            ),
+            Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width - 120,
+                //height: MediaQuery.of(context).size.width - 50,
+                child: LinearProgressIndicator(
+                    valueColor: timerState is TimerRunInProgress
+                        ? const AlwaysStoppedAnimation<Color>(Colors.redAccent)
+                        : const AlwaysStoppedAnimation<Color>(
+                            Colors.blueAccent),
+                    minHeight: 3,
+                    backgroundColor: Colors.grey[900],
+                    value: timerState.duration / ttime
+                    //TODO: track total timer value via observer
+                    ),
+              ),
+            )
+          ],
         );
       },
     );
