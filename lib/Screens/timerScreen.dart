@@ -93,13 +93,16 @@ class TimerTextField extends StatelessWidget {
 
         print(timerState);
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
+        return Column(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.fromLTRB(0, 100.0, 0, 0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
                     width: 110,
                     child: TextFormField(
                         decoration: InputDecoration(
@@ -109,8 +112,9 @@ class TimerTextField extends StatelessWidget {
                             border: InputBorder.none),
                         controller: _minController,
                         keyboardType: textInputType,
-                    readOnly: (timerState is TimerRunInProgress) ? true : false,
-                    maxLength: 2,
+                        readOnly:
+                            (timerState is TimerRunInProgress) ? true : false,
+                        maxLength: 2,
                         style: Theme.of(context).textTheme.headline1!.copyWith(
                             fontSize: Theme.of(context)
                                     .textTheme
@@ -127,20 +131,22 @@ class TimerTextField extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
-                child: Text(':', style: Theme.of(context).textTheme.headline1),
-              ),
-              Container(
+                    child:
+                        Text(':', style: Theme.of(context).textTheme.headline1),
+                  ),
+                  Container(
                     width: 110,
                     child: TextFormField(
-                    decoration: InputDecoration(
-                        hintText: '00',
-                        focusColor: Colors.amber,
-                        counterText: '',
-                        border: InputBorder.none),
-                    controller: _secController,
-                    keyboardType: textInputType,
-                    readOnly: (timerState is TimerRunInProgress) ? true : false,
-                    maxLength: 2,
+                        decoration: InputDecoration(
+                            hintText: '00',
+                            focusColor: Colors.amber,
+                            counterText: '',
+                            border: InputBorder.none),
+                        controller: _secController,
+                        keyboardType: textInputType,
+                        readOnly:
+                            (timerState is TimerRunInProgress) ? true : false,
+                        maxLength: 2,
                         style: Theme.of(context).textTheme.headline1!.copyWith(
                               fontSize: Theme.of(context)
                                       .textTheme
