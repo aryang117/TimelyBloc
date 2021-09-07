@@ -127,12 +127,16 @@ class TimerTextField extends StatelessWidget {
               Container(
                 width: 125,
                 child: TextFormField(
-                    decoration: InputDecoration.collapsed(
-                        hintText: '00', focusColor: Colors.amber),
+                    decoration: InputDecoration(
+                        hintText: '00',
+                        focusColor: Colors.amber,
+                        counterText: '',
+                        border: InputBorder.none),
                     controller: _secController,
                     keyboardType: textInputType,
-                    style: Theme.of(context).textTheme.headline1,
                     readOnly: (timerState is TimerRunInProgress) ? true : false,
+                    maxLength: 2,
+                    style: Theme.of(context).textTheme.headline1,
                     onFieldSubmitted: (String? value) {
                       value = value == null ? '600' : value;
                       context.read<TimerBloc>().add(TimerStarted(
