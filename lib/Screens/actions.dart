@@ -14,7 +14,7 @@ class ActionsWidget extends StatelessWidget {
             context.read<TimerBloc>().add(TimerReset());
 
           return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (timerState is TimerInitial) ...[
                 MaterialButton(
@@ -46,6 +46,17 @@ class ActionsWidget extends StatelessWidget {
                       child: Text('PAUSE')),
                   onPressed: () => context.read<TimerBloc>().add(TimerPaused()),
                 ),
+                TweenAnimationBuilder<double>(
+                  curve: Curves.decelerate,
+                  tween: Tween(begin: 0, end: 100),
+                  duration: const Duration(milliseconds: 200),
+                  builder: (context, double value, Widget? child) {
+                    return Container(
+                      width: value,
+                      color: Colors.green,
+                    );
+                  },
+                ),
                 MaterialButton(
                   color: Colors.grey[900],
                   elevation: 0,
@@ -74,6 +85,10 @@ class ActionsWidget extends StatelessWidget {
                       child: Text('RESUME')),
                   onPressed: () =>
                       context.read<TimerBloc>().add(TimerResumed()),
+                ),
+                Container(
+                  width: 100,
+                  color: Colors.green,
                 ),
                 MaterialButton(
                   color: Colors.grey[900],
