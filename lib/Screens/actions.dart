@@ -27,9 +27,8 @@ class ActionsWidget extends StatelessWidget {
                       height: 90,
                       width: 60,
                       child: Text('START')),
-                  onPressed: () => context
-                      .read<TimerBloc>()
-                      .add(TimerStarted(duration: timerState.duration)),
+                  onPressed: () => context.read<TimerBloc>().add(TimerStarted(
+                      duration: context.read<TimerBloc>().getTotalTime())),
                 ),
               ],
               if (timerState is TimerRunInProgress) ...[

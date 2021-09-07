@@ -70,9 +70,7 @@ class TimerTextField extends StatelessWidget {
 
   int _getTime(int min, int sec) {
     int time = ((min * 60) + sec);
-
     print("getTime =" + time.toString());
-
     return time;
   }
 
@@ -85,6 +83,8 @@ class TimerTextField extends StatelessWidget {
     final minutesStr =
         ((duration / 60) % 60).floor().toString().padLeft(2, '0');
     final secondsStr = ((duration % 60)).floor().toString().padLeft(2, '0');
+
+    int ttime = context.read<TimerBloc>().getTotalTime();
 
     return BlocBuilder<TimerBloc, TimerState>(
       builder: (_, timerState) {
@@ -169,9 +169,10 @@ class TimerTextField extends StatelessWidget {
                           //TODO : make another smol bloc for updation via formfields,
                           //the play button will track changes and when pressed will give new values to the timer
 
-                          // context.read<FormBloc>().newString(_getTime(
-                          //         int.parse(_minController.text), int.parse(value))
-                          //     .toString());
+                          context.read<TimerBloc>().setTotalTime(
+                                _getTime(int.parse(_minController.text),
+                                    int.parse(_secController.text)),
+                              );
                         }),
                   ),
                 ],
