@@ -137,6 +137,7 @@ class TimerTextField extends StatelessWidget {
                   Container(
                     width: 110,
                     child: TextFormField(
+                        textAlign: TextAlign.left,
                         decoration: InputDecoration(
                             hintText: '00',
                             focusColor: Colors.amber,
