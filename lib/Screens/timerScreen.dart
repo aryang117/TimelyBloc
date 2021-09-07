@@ -100,15 +100,15 @@ class TimerTextField extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 125,
-                child: TextFormField(
-                    decoration: InputDecoration(
-                        hintText: '00',
-                        focusColor: Colors.amber,
-                        counterText: '',
-                        border: InputBorder.none),
-                    controller: _minController,
-                    keyboardType: textInputType,
+                    width: 110,
+                    child: TextFormField(
+                        decoration: InputDecoration(
+                            hintText: '00',
+                            focusColor: Colors.amber,
+                            counterText: '',
+                            border: InputBorder.none),
+                        controller: _minController,
+                        keyboardType: textInputType,
                     readOnly: (timerState is TimerRunInProgress) ? true : false,
                     maxLength: 2,
                         style: Theme.of(context).textTheme.headline1!.copyWith(
@@ -130,8 +130,8 @@ class TimerTextField extends StatelessWidget {
                 child: Text(':', style: Theme.of(context).textTheme.headline1),
               ),
               Container(
-                width: 125,
-                child: TextFormField(
+                    width: 110,
+                    child: TextFormField(
                     decoration: InputDecoration(
                         hintText: '00',
                         focusColor: Colors.amber,
