@@ -111,17 +111,22 @@ class TimerTextField extends StatelessWidget {
                     keyboardType: textInputType,
                     readOnly: (timerState is TimerRunInProgress) ? true : false,
                     maxLength: 2,
-                    style: Theme.of(context).textTheme.headline1,
-                    onFieldSubmitted: (String? value) {
-                      value = value == null ? '600' : value;
-                      context.read<TimerBloc>().add(TimerStarted(
-                          duration: _getTime(int.parse(value),
-                              int.parse(_secController.text))));
-                      print('hehe' + value);
-                    }),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
+                        style: Theme.of(context).textTheme.headline1!.copyWith(
+                            fontSize: Theme.of(context)
+                                    .textTheme
+                                    .headline1!
+                                    .fontSize! -
+                                20),
+                        onFieldSubmitted: (String? value) {
+                          value = value == null ? '600' : value;
+                          context.read<TimerBloc>().add(TimerStarted(
+                              duration: _getTime(int.parse(value),
+                                  int.parse(_secController.text))));
+                          print('hehe' + value);
+                        }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
                 child: Text(':', style: Theme.of(context).textTheme.headline1),
               ),
               Container(
@@ -136,17 +141,23 @@ class TimerTextField extends StatelessWidget {
                     keyboardType: textInputType,
                     readOnly: (timerState is TimerRunInProgress) ? true : false,
                     maxLength: 2,
-                    style: Theme.of(context).textTheme.headline1,
-                    onFieldSubmitted: (String? value) {
-                      value = value == null ? '600' : value;
-                      context.read<TimerBloc>().add(TimerStarted(
-                          duration: _getTime(int.parse(_minController.text),
-                              int.parse(value))));
-                      print('weorfhsdidfh');
-                      print('hehe' +
-                          _minController.text.toString() +
-                          ":" +
-                          value);
+                        style: Theme.of(context).textTheme.headline1!.copyWith(
+                              fontSize: Theme.of(context)
+                                      .textTheme
+                                      .headline1!
+                                      .fontSize! -
+                                  20,
+                            ),
+                        onFieldSubmitted: (String? value) {
+                          value = value == null ? '600' : value;
+                          context.read<TimerBloc>().add(TimerStarted(
+                              duration: _getTime(int.parse(_minController.text),
+                                  int.parse(value))));
+                          print('weorfhsdidfh');
+                          print('hehe' +
+                              _minController.text.toString() +
+                              ":" +
+                              value);
 
                       //TODO : make another smol bloc for updation via formfields,
                       //the play button will track changes and when pressed will give new values to the timer
