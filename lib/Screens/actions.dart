@@ -10,6 +10,9 @@ class ActionsWidget extends StatelessWidget {
     return BlocBuilder<TimerBloc, TimerState>(
         buildWhen: (prev, state) => prev.runtimeType != state.runtimeType,
         builder: (_, timerState) {
+          if (timerState is TimerRunComplete)
+            context.read<TimerBloc>().add(TimerReset());
+
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -54,6 +57,13 @@ class ActionsWidget extends StatelessWidget {
                         context.read<TimerBloc>().add(TimerReset()),
                     icon: Icon(Icons.replay_circle_filled_rounded)),
               ],
+              // if (timerState is TimerRunComplete) ...[
+              //   IconButton(
+              //       iconSize: 65,
+              //       onPressed: () =>
+              //           context.read<TimerBloc>().add(TimerReset()),
+              //       icon: Icon(Icons.replay_circle_filled_rounded)),
+              // ],
             ],
           );
         });
