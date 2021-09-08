@@ -78,7 +78,6 @@ class TimerTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final _minController = TextEditingController(text: '00');
     final _secController = TextEditingController(text: '00');
-    const TextInputType textInputType = TextInputType.number;
 
     final duration = context.select((TimerBloc bloc) => bloc.state.duration);
     final minutesStr =
@@ -86,6 +85,13 @@ class TimerTextField extends StatelessWidget {
     final secondsStr = ((duration % 60)).floor().toString().padLeft(2, '0');
 
     int totalTime = context.read<TimerBloc>().getTotalTime();
+
+    void updateDuration() {
+      context.read<TimerBloc>().setTotalTime(_getTime(
+          int.parse(_minController.text), int.parse(_secController.text)));
+
+      print(_minController.text + 'eheh');
+    }
 
     return BlocBuilder<TimerBloc, TimerState>(
       builder: (_, timerState) {
@@ -103,89 +109,92 @@ class TimerTextField extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 110,
-                    child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: '00',
-                            focusColor: Colors.amber,
-                            counterText: '',
-                            border: InputBorder.none),
-                        controller: _minController,
-                        keyboardType: textInputType,
-                        readOnly:
-                            (timerState is TimerRunInProgress) ? true : false,
-                        maxLength: 2,
-                        style: Theme.of(context).textTheme.headline1!.copyWith(
-                            fontSize: Theme.of(context)
-                                    .textTheme
-                                    .headline1!
-                                    .fontSize! -
-                                20),
-                        onFieldSubmitted: (String? value) {
-                          context.read<TimerBloc>().setTotalTime(
-                                _getTime(int.parse(_minController.text),
-                                    int.parse(_secController.text)),
-                              );
-                        }),
-                  ),
+                  TimerField(
+                      controller: _minController,
+                      isReadOnly: () =>
+                          (timerState is TimerRunInProgress) ? true : false,
+                      onSubmit: updateDuration),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
                     child:
                         Text(':', style: Theme.of(context).textTheme.headline1),
                   ),
-                  Container(
-                    width: 110,
-                    child: TextFormField(
-                        textAlign: TextAlign.left,
-                        decoration: InputDecoration(
-                            hintText: '00',
-                            focusColor: Colors.amber,
-                            counterText: '',
-                            border: InputBorder.none),
-                        controller: _secController,
-                        keyboardType: textInputType,
-                        readOnly:
-                            (timerState is TimerRunInProgress) ? true : false,
-                        maxLength: 2,
-                        style: Theme.of(context).textTheme.headline1!.copyWith(
-                              fontSize: Theme.of(context)
-                                      .textTheme
-                                      .headline1!
-                                      .fontSize! -
-                                  20,
-                            ),
-                        onFieldSubmitted: (String? value) {
-                          //TODO : make another smol bloc for updation via formfields,
-                          //the play button will track changes and when pressed will give new values to the timer
-
-                          context.read<TimerBloc>().setTotalTime(
-                                _getTime(int.parse(_minController.text),
-                                    int.parse(_secController.text)),
-                              );
-                        }),
-                  ),
+                  TimerField(
+                      controller: _secController,
+                      isReadOnly: () =>
+                          (timerState is TimerRunInProgress) ? true : false,
+                      onSubmit: updateDuration),
                 ],
               ),
             ),
-            Center(
-              child: Container(
-                width: MediaQuery.of(context).size.width - 120,
-                child: LinearProgressIndicator(
-                    valueColor: timerState is TimerRunInProgress
-                        ? const AlwaysStoppedAnimation<Color>(Colors.redAccent)
-                        : const AlwaysStoppedAnimation<Color>(
-                            Colors.blueAccent),
-                    minHeight: 3,
-                    backgroundColor: Colors.grey[900],
-                    value: timerState.duration / totalTime
-                    //TODO: track total timer value via observer
-                    ),
-              ),
-            )
+            TimeProgressIndicator(
+                getVal: () => timerState.duration / totalTime,
+                colorBool: () =>
+                    timerState is TimerRunInProgress ? true : false),
           ],
         );
       },
+    );
+  }
+}
+
+// timer fields for both sec and min
+class TimerField extends StatelessWidget {
+  const TimerField(
+      {Key? key,
+      required this.controller,
+      required this.isReadOnly,
+      required this.onSubmit})
+      : super(key: key);
+
+  final TextEditingController controller;
+  final Function isReadOnly;
+  final Function onSubmit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 110,
+      child: TextFormField(
+          decoration: InputDecoration(
+              hintText: '00',
+              focusColor: Colors.amber,
+              counterText: '',
+              border: InputBorder.none),
+          controller: controller,
+          keyboardType: TextInputType.number,
+          readOnly: isReadOnly(),
+          maxLength: 2,
+          style: Theme.of(context).textTheme.headline1!.copyWith(
+              fontSize: Theme.of(context).textTheme.headline1!.fontSize! - 20),
+          onFieldSubmitted: (String? x) {
+            onSubmit();
+          }),
+    );
+  }
+}
+
+// a progress indicator below the timer, well, showing the progress
+class TimeProgressIndicator extends StatelessWidget {
+  const TimeProgressIndicator(
+      {Key? key, required this.getVal, required this.colorBool})
+      : super(key: key);
+  final Function getVal;
+  final Function colorBool;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width - 120,
+        child: LinearProgressIndicator(
+            valueColor: colorBool()
+                ? const AlwaysStoppedAnimation<Color>(Colors.redAccent)
+                : const AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+            minHeight: 3,
+            backgroundColor: Colors.grey[900],
+            value: getVal()),
+      ),
     );
   }
 }
