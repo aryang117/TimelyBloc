@@ -103,6 +103,26 @@ class ActionsWidget extends StatelessWidget {
                   onPressed: () => context.read<TimerBloc>().add(TimerReset()),
                 ),
               ],
+              if (timerState is TimerRunComplete) ...[
+                MaterialButton(
+                  color: Colors.redAccent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(200)),
+                  onPressed: () => context.read<TimerBloc>().add(TimerReset()),
+                  child: Container(
+                    height: 90,
+                    width: 60,
+                    child: Center(
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                ),
+              ]
+
               // if (timerState is TimerRunComplete) ...[
               //   IconButton(
               //       iconSize: 65,

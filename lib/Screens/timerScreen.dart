@@ -74,6 +74,13 @@ class TimerTextField extends StatelessWidget {
     return time;
   }
 
+  void vibratePhone() async {
+    // Check if the device can vibrate
+    bool canVibrate = await Vibrate.canVibrate;
+
+    if (canVibrate) Vibrate.vibrate();
+  }
+
   @override
   Widget build(BuildContext context) {
     final _minController = TextEditingController(text: '00');
@@ -100,41 +107,70 @@ class TimerTextField extends StatelessWidget {
 
         print(timerState);
 
-        return Column(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.fromLTRB(0, 100.0, 0, 0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TimerField(
-                      controller: _minController,
-                      isReadOnly: () =>
-                          (timerState is TimerRunInProgress) ? true : false,
-                      onSubmit: updateDuration),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
-                    child:
-                        Text(':', style: Theme.of(context).textTheme.headline1),
-                  ),
-                  TimerField(
-                      controller: _secController,
-                      isReadOnly: () =>
-                          (timerState is TimerRunInProgress) ? true : false,
-                      onSubmit: updateDuration),
-                ],
+        if (timerState is TimerRunComplete) {
+          vibratePhone();
+          return Container(
+              padding: const EdgeInsets.only(top: 50),
+              child: TimerFinishField());
+        } else {
+          return Column(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.fromLTRB(0, 100.0, 0, 0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TimerField(
+                        controller: _minController,
+                        isReadOnly: () =>
+                            (timerState is TimerRunInProgress) ? true : false,
+                        onSubmit: updateDuration),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
+                      child: Text(':',
+                          style: Theme.of(context).textTheme.headline1),
+                    ),
+                    TimerField(
+                        controller: _secController,
+                        isReadOnly: () =>
+                            (timerState is TimerRunInProgress) ? true : false,
+                        onSubmit: updateDuration),
+                  ],
+                ),
               ),
-            ),
-            TimeProgressIndicator(
-                getVal: () => timerState.duration / totalTime,
-                colorBool: () =>
-                    timerState is TimerRunInProgress ? true : false),
-          ],
-        );
+              TimeProgressIndicator(
+                  getVal: () => timerState.duration / totalTime,
+                  colorBool: () =>
+                      timerState is TimerRunInProgress ? true : false),
+            ],
+          );
+        }
       },
     );
+  }
+}
+
+class TimerFinishField extends StatelessWidget {
+  const TimerFinishField({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+        curve: Curves.decelerate,
+        tween: Tween(begin: 0, end: 200),
+        duration: const Duration(milliseconds: 200),
+        builder: (context, double value, Widget? child) {
+          return Container(
+            height: value,
+            child: Text('TIME OVER',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline1!.copyWith(
+                    fontSize:
+                        Theme.of(context).textTheme.headline1!.fontSize! - 20)),
+          );
+        });
   }
 }
 
