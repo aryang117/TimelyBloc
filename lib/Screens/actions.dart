@@ -10,9 +10,6 @@ class ActionsWidget extends StatelessWidget {
     return BlocBuilder<TimerBloc, TimerState>(
         buildWhen: (prev, state) => prev.runtimeType != state.runtimeType,
         builder: (_, timerState) {
-          if (timerState is TimerRunComplete)
-            context.read<TimerBloc>().add(TimerReset());
-
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
